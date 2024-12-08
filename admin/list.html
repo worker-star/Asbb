@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Firebase Admin Panel</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(120deg, #89f7fe, #66a6ff);
+            background-color: #f3f4f7;
             color: #333;
         }
 
@@ -22,71 +18,90 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #0052cc;
-            padding: 10px;
+            background: linear-gradient(90deg, #0066cc, #003366);
+            padding: 20px;
             color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .navbar h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 600;
+        .profile-menu {
+            position: relative;
+            display: inline-block;
         }
 
-        .navbar .recycle-btn {
-            background-color: #000000;
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            font-size: 14px;
+        .profile-menu img {
             cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            border: 2px solid #fff;
+            transition: transform 0.3s ease;
         }
 
-        .navbar .recycle-btn:hover {
-            background-color: #e63946;
+        .profile-menu img:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 55px;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-content a i {
+            margin-right: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile-menu:hover .dropdown-content {
+            display: block;
         }
 
         .container {
-            padding: 20px;
-            margin: 10px;
-            background: #fff;
+            padding: 30px;
+            max-width: 1100px;
+            margin: auto;
+            background-color: #fff;
             border-radius: 12px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            color: #0052cc;
-            font-size: 1.5em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #0052cc;
+            color: #0066cc;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #0066cc;
             padding-bottom: 8px;
-        }
-
-        .search-bar {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-right: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 25px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         table, th, td {
@@ -94,91 +109,84 @@
         }
 
         th {
-            background: #0052cc;
+            background-color: #0066cc;
             color: #fff;
-            padding: 12px;
-            font-size: 14px;
+            padding: 16px;
+            font-size: 18px;
+            text-align: left;
         }
 
         td {
-            padding: 12px;
+            padding: 14px;
             text-align: left;
-            font-size: 14px;
         }
 
-        td .action-btn {
+        td button {
             border: none;
+            background: none;
             cursor: pointer;
-            font-size: 14px;
-            padding: 6px 10px;
-            margin-right: 5px;
+            font-size: 16px;
+            padding: 10px;
             border-radius: 6px;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
-        td .view-btn {
-            color: #17a2b8;
-            background-color: #e3f2fd;
+        td button.view-btn {
+            color: #28a745;
         }
 
-        td .view-btn:hover {
-            background-color: #d1ecf1;
-            color: #138496;
+        td button.delete-btn {
+            color: #dc3545;
         }
 
-        @media (max-width: 480px) {
+        td button.view-btn:hover {
+            color: #218838;
+        }
+
+        td button.delete-btn:hover {
+            color: #c82333;
+        }
+
+        @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 align-items: center;
-                padding: 12px;
             }
 
-            .navbar h2 {
-                font-size: 18px;
-            }
-
-            .recycle-btn {
+            .profile-menu {
                 margin-top: 10px;
             }
 
-            h1 {
-                font-size: 1.3em;
-            }
-
-            .search-bar input {
-                font-size: 12px;
-                padding: 8px;
-            }
-
             table {
-                font-size: 12px;
-            }
-
-            td .action-btn {
-                font-size: 12px;
-                padding: 4px 8px;
+                font-size: 14px;
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
     <div class="navbar">
         <h2>Admin Panel</h2>
-        <button class="recycle-btn" id="recycle-bin-btn"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
+        <div class="profile-menu">
+            <img src="profile.png" alt="Profile Image" id="profile-img">
+            <div class="dropdown-content">
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                <a href="#" id="change-password-btn"><i class="fas fa-key"></i>Change Password</a>
+            </div>
+        </div>
     </div>
 
     <div class="container">
         <h1>Data Overview</h1>
-
-        <div class="search-bar">
-            <input type="text" id="search-box" placeholder="Search by number or date...">
-        </div>
-
+        
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>Date</th>
                     <th>Number</th>
+                    <th>Register Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -188,54 +196,47 @@
         </table>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-database-compat.js"></script>
     <script>
-       const firebaseConfig = {
-           apiKey: "AIzaSyDep3sTdyVW2HpQDxnMudxHgASDcVsZfno",
-           authDomain: "axis-9b781.firebaseapp.com",
-           databaseURL: "https://axis-9b781-default-rtdb.firebaseio.com",
-           projectId: "axis-9b781",
-           storageBucket: "axis-9b781.firebasestorage.app",
-           messagingSenderId: "715102207888",
-           appId: "1:715102207888:web:b1d909e4526d66c9817d15",
-           measurementId: "G-QNWFEK1WMX"
-       };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDep3sTdyVW2HpQDxnMudxHgASDcVsZfno",
+            authDomain: "axis-9b781.firebaseapp.com",
+            databaseURL: "https://axis-9b781-default-rtdb.firebaseio.com",
+            projectId: "axis-9b781",
+            storageBucket: "axis-9b781.firebasestorage.app",
+            messagingSenderId: "715102207888",
+            appId: "1:715102207888:web:b1d909e4526d66c9817d15",
+            measurementId: "G-QNWFEK1WMX"
+        };
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const dataTable = document.getElementById('data-table');
-        const searchBox = document.getElementById('search-box');
-        const recycleBinBtn = document.getElementById('recycle-bin-btn');
 
-        recycleBinBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
+        function fetchData() {
+            const dataTable = document.getElementById('data-table');
+            dataTable.innerHTML = '';
 
-        function fetchData(searchTerm = '') {
-            const dbRef = database.ref('/data');
+            const dbRef = firebase.database().ref('/data');
             dbRef.on('value', (snapshot) => {
-                const dataEntries = [];
+                const data = [];
                 snapshot.forEach((childSnapshot) => {
                     const key = childSnapshot.key;
-                    const [date, number] = key.split('--');
-                    if (key.toLowerCase().includes(searchTerm.toLowerCase())) {
-                        dataEntries.push({ date, number, fullKey: key });
-                    }
+                    const details = childSnapshot.val().Details;
+                    data.push({
+                        number: key,
+                        registerDate: details.RegisterDate,
+                    });
                 });
 
-                dataEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+                // Sort by newest date
+                data.sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate));
 
-                dataTable.innerHTML = '';
-                dataEntries.forEach((entry) => {
+                // Populate table
+                data.forEach(item => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${entry.date}</td>
-                        <td>${entry.number}</td>
+                        <td>${item.number}</td>
+                        <td>${item.registerDate}</td>
                         <td>
-                            <button class="action-btn view-btn" onclick="viewData('${entry.fullKey}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                            <button class="view-btn" onclick="viewData('${item.number}')"><i class="fas fa-eye"></i> View</button>
                         </td>
                     `;
                     dataTable.appendChild(tr);
@@ -243,16 +244,11 @@
             });
         }
 
-        searchBox.addEventListener('input', () => {
-            const searchTerm = searchBox.value.trim();
-            fetchData(searchTerm);
-        });
+        function viewData(number) {
+            window.location.href = `view.html?key=${number}`;
+        }
 
-        window.viewData = function (key) {
-            window.location.href = `view.html?key=${encodeURIComponent(key)}`;
-        };
-
-        fetchData();
+        document.addEventListener('DOMContentLoaded', fetchData);
     </script>
 </body>
 </html>
